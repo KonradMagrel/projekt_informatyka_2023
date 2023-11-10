@@ -17,6 +17,7 @@ int main()
 
         window.clear();
         window.draw(shape);
+        //kit z tym
         window.display();
     }
 
