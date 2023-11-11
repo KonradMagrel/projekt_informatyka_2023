@@ -1,21 +1,22 @@
-#include <iostream>
-#include "gra.h"
+#include <SFML/Graphics.hpp>
 
 int main()
 {
-    Game gra();
-        //glowna petla
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+
     while (window.isOpen())
     {
-        
-        while (gra.running())
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            gra.update();
-            gra.render();
+            if (event.type == sf::Event::Closed)
+                window.close();
         }
 
         window.clear();
-       
+        window.draw(shape);
         window.display();
     }
 
