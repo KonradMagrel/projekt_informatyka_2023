@@ -15,11 +15,16 @@ private:
 	sf::RenderWindow* okno;
 	sf::Event event;
 	sf::VideoMode videoMode;
-	sf::RectangleShape przeciwnik;
+	sf::Sprite przeciwnik;
+	sf::Texture przeciwnikTexture;
 	//prywatne funkcje
 		void initZmienne();
 	void initOkno();
 	void initPrzeciwnik();
+	void przeciwnikWDol();
+	void przeciwnikWGore();
+	void przeciwnikWPrawo();
+	void przeciwnikWLewo();
 	void movePrzeciwnik(float x,float y);
 	//objekty rysowane
 	
