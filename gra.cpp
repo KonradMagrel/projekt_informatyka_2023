@@ -1,4 +1,5 @@
 #include "gra.h"
+#include <ctime>
 //prywatne funkcje
 
 int kierunek = 0;// kierunek 0 - prawo, 1-lewo 2- gora 3 - dol
@@ -7,6 +8,7 @@ void gra::initZmienne()
 {
 
 	this->okno = nullptr;
+	 this->licznikPunktow = 0;
 }
 
 void gra::initOkno()
@@ -30,6 +32,41 @@ void gra::initPrzeciwnik()
 	// Ustawienie pocz¹tkowej pozycji przeciwnika (mo¿esz dostosowaæ do w³asnych potrzeb)
 	this->przeciwnik.setPosition(640.f, 300.f);
 	this->przeciwnik.setScale(0.05f, 0.05f);
+}
+void gra::initKloc()
+{
+	this->kloc.setFillColor(sf::Color::Red);
+	this->kloc.setPosition(400.f, 300.f);
+	this->kloc.setRadius(10.f);
+}
+void gra::zmianaPolozenia()
+{
+	if (sprawdzanieKolizji())
+	{
+
+		srand(static_cast<unsigned>(time(0)));
+		float x = static_cast<float>(rand() % 800);
+		float y = static_cast<float>(rand() % 600);
+
+		this->kloc.setPosition(x, y);
+	}
+}
+bool gra::sprawdzanieKolizji()
+{
+	sf::FloatRect klocBounds = this->kloc.getGlobalBounds();
+	sf::FloatRect przeciwnikBounds = this->przeciwnik.getGlobalBounds();
+
+	if (klocBounds.intersects(przeciwnikBounds))
+	{
+		// Kolizja zachodzi
+		return true;
+	}
+
+	// Brak kolizji
+	return false;
+}
+void gra::doliczPkt() {
+	this->licznikPunktow++;
 }
 
 void gra::movePrzeciwnik(float x, float y)
@@ -188,6 +225,7 @@ gra::gra()
 	this->initZmienne();
 	this->initOkno();
 	this->initPrzeciwnik();
+	this->initKloc();
 }
 
 gra::~gra()
@@ -202,6 +240,11 @@ const bool gra::running() const
 
 void gra::pollEvents()
 {
+	if (this->sprawdzanieKolizji())
+	{
+		this->doliczPkt();
+		this->zmianaPolozenia();
+	}
 
 	while (this->okno->pollEvent(this->event))
 	{
@@ -254,6 +297,17 @@ void gra::render()
 	*/
 	this->okno->clear();
 	this->okno->draw(this->przeciwnik);
+	this->okno->draw(this->kloc);
+	sf::Font font;
+	font.loadFromFile("arial.ttf");
+	sf::Text text;
+	text.setFont(font);
+	text.setString("Liczba punktow: " + std::to_string(this->licznikPunktow));
+	text.setCharacterSize(24);
+	text.setFillColor(sf::Color::White);
+	text.setPosition(10.f, 10.f);
+	
+	this->okno->draw(text);
 	this->okno->display();
 }
 

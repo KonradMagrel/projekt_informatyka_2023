@@ -17,15 +17,23 @@ private:
 	sf::VideoMode videoMode;
 	sf::Sprite przeciwnik;
 	sf::Texture przeciwnikTexture;
+	sf::CircleShape kloc;
+
 	//prywatne funkcje
+	bool sprawdzanieKolizji();
 		void initZmienne();
 	void initOkno();
 	void initPrzeciwnik();
+	void initKloc();
 	void przeciwnikWDol();
 	void przeciwnikWGore();
 	void przeciwnikWPrawo();
 	void przeciwnikWLewo();
 	void movePrzeciwnik(float x,float y);
+	void doliczPkt();
+	void zmianaPolozenia();
+	int licznikPunktow;
+	int x, y;
 	//objekty rysowane
 	
 public:
