@@ -8,15 +8,15 @@ void gra::initZmienne()
 {
 
 	this->okno = nullptr;
-	 this->licznikPunktow = 0;
+	this->licznikPunktow = 0;
 }
 
 void gra::initOkno()
 {
 	this->videoMode.width = 800;
-    this->videoMode.height = 600;
-	this->okno = new sf::RenderWindow(this->videoMode, "Game 1", sf::Style::Titlebar| sf::Style::Close);
-	this->okno->setFramerateLimit(60);
+	this->videoMode.height = 600;
+	this->okno = new sf::RenderWindow(this->videoMode, "Game 1", sf::Style::Titlebar | sf::Style::Close);
+	this->okno->setFramerateLimit(144);
 }
 void gra::initPrzeciwnik()
 {
@@ -41,13 +41,14 @@ void gra::initKloc()
 }
 void gra::zmianaPolozenia()
 {
-	if (sprawdzanieKolizji())
+	sf::FloatRect klocBounds = this->kloc.getGlobalBounds();
+	sf::FloatRect przeciwnikBounds = this->przeciwnik.getGlobalBounds();
+	while (sprawdzanieKolizji())
 	{
-
-		srand(static_cast<unsigned>(time(0)));
 		float x = static_cast<float>(rand() % 800);
 		float y = static_cast<float>(rand() % 600);
-
+		//licznikPunktow = this->ilePunktowZaKloca;
+		ilePunktowZaKloca = 1;
 		this->kloc.setPosition(x, y);
 	}
 }
@@ -66,7 +67,8 @@ bool gra::sprawdzanieKolizji()
 	return false;
 }
 void gra::doliczPkt() {
-	this->licznikPunktow++;
+	this->ilePunktow = this->ilePunktow + ilePunktowZaKloca;
+	//ilePunktowZaKloca = 0;
 }
 
 void gra::movePrzeciwnik(float x, float y)
@@ -167,7 +169,7 @@ void gra::przeciwnikWGore()
 			{
 			case 0:
 			{
-				r =270;
+				r = 270;
 				break;
 			}
 			case 1:
@@ -182,7 +184,7 @@ void gra::przeciwnikWGore()
 			}
 			}
 
- 		 this->przeciwnik.rotate(r);
+			this->przeciwnik.rotate(r);
 		}
 		kierunek = 2;
 	}
@@ -222,10 +224,14 @@ void gra::przeciwnikWDol()
 
 gra::gra()
 {
+	srand(static_cast<unsigned>(time(0)));
+	this->ilePunktowZaKloca = 1;
+	this->ilePunktow = 0;
 	this->initZmienne();
 	this->initOkno();
 	this->initPrzeciwnik();
 	this->initKloc();
+
 }
 
 gra::~gra()
@@ -263,7 +269,7 @@ void gra::pollEvents()
 			{
 				movePrzeciwnik(10, 0);
 			}
-			
+
 			if (event.key.code == sf::Keyboard::Left)
 			{
 				movePrzeciwnik(-10, 0);
@@ -272,7 +278,7 @@ void gra::pollEvents()
 			{
 				movePrzeciwnik(0, 10);
 			}
-			
+
 			if (event.key.code == sf::Keyboard::Up)
 			{
 				movePrzeciwnik(0, -10);
@@ -302,11 +308,11 @@ void gra::render()
 	font.loadFromFile("arial.ttf");
 	sf::Text text;
 	text.setFont(font);
-	text.setString("Liczba punktow: " + std::to_string(this->licznikPunktow));
+	text.setString("Liczba punktow: " + std::to_string(this->ilePunktow));
 	text.setCharacterSize(24);
 	text.setFillColor(sf::Color::White);
 	text.setPosition(10.f, 10.f);
-	
+
 	this->okno->draw(text);
 	this->okno->display();
 }

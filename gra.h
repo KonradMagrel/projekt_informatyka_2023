@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include<SFML/window.hpp>
+#include <SFML/window.hpp>
 #include <SFML/Audio.hpp>
 /*
 * klasa gry cos ala silnik?
@@ -11,7 +11,7 @@ class gra
 private:
 	//zmienne
 	//okno
-	
+
 	sf::RenderWindow* okno;
 	sf::Event event;
 	sf::VideoMode videoMode;
@@ -21,7 +21,7 @@ private:
 
 	//prywatne funkcje
 	bool sprawdzanieKolizji();
-		void initZmienne();
+	void initZmienne();
 	void initOkno();
 	void initPrzeciwnik();
 	void initKloc();
@@ -29,13 +29,15 @@ private:
 	void przeciwnikWGore();
 	void przeciwnikWPrawo();
 	void przeciwnikWLewo();
-	void movePrzeciwnik(float x,float y);
+	void movePrzeciwnik(float x, float y);
 	void doliczPkt();
 	void zmianaPolozenia();
 	int licznikPunktow;
-	int x, y;
+	int x, y, klocpkt;
+	float z, o;
+
 	//objekty rysowane
-	
+
 public:
 	//konstruktory i destruktory
 	gra();
@@ -46,4 +48,6 @@ public:
 	void pollEvents();
 	void update();
 	void render();
+	int ilePunktowZaKloca = 0;
+	int ilePunktow = 0;
 };
