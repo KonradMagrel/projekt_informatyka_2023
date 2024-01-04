@@ -17,7 +17,15 @@ private:
 	sf::VideoMode videoMode;
 	sf::Sprite przeciwnik;
 	sf::Texture przeciwnikTexture;
+	sf::Texture przeciwnikTextureZamknietaGeba;
 	sf::CircleShape kloc;
+	sf::RectangleShape barieraLewa;
+	sf::RectangleShape barieraPrawa;
+	sf::RectangleShape barieraDol;
+	sf::RectangleShape barieraGora;
+
+
+
 
 	//prywatne funkcje
 	bool sprawdzanieKolizji();
@@ -32,9 +40,16 @@ private:
 	void movePrzeciwnik(float x, float y);
 	void doliczPkt();
 	void zmianaPolozenia();
+	void zmienGebe(int el);
 	int licznikPunktow;
 	int x, y, klocpkt;
 	float z, o;
+	void initbarieraLewa();
+	void initbarieraPrawa();
+	void initbarieraGora();
+	void initbarieraDol();
+	bool sprawdzanieKolizjiBariera();
+	void przegrana();
 
 	//objekty rysowane
 
