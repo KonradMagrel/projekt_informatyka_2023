@@ -11,8 +11,8 @@ class gra
 private:
 	//zmienne
 	//okno
-
 	sf::RenderWindow* okno;
+
 	sf::Event event;
 	sf::VideoMode videoMode;
 	sf::Sprite przeciwnik;
@@ -23,6 +23,8 @@ private:
 	sf::RectangleShape barieraPrawa;
 	sf::RectangleShape barieraDol;
 	sf::RectangleShape barieraGora;
+	sf::RectangleShape barieraSrodek;
+	sf::Music music;
 
 
 
@@ -48,16 +50,21 @@ private:
 	void initbarieraPrawa();
 	void initbarieraGora();
 	void initbarieraDol();
+	void initbarieraSrodek();
 	bool sprawdzanieKolizjiBariera();
 	void przegrana();
+	void miau();
+	bool klocDotykaSciany();
 
 	//objekty rysowane
 
 public:
+
 	//konstruktory i destruktory
 	gra();
 	virtual ~gra();
-
+	void run(int opcja);
+	void setWindow(sf::RenderWindow* windowd, sf::VideoMode videoMode);
 	const bool running() const;
 	//funkcje
 	void pollEvents();
