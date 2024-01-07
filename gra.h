@@ -25,16 +25,21 @@ private:
 	sf::RectangleShape barieraGora;
 	sf::RectangleShape barieraSrodek;
 	sf::Music music;
-
+	int selectedItemIndex=0;
 
 
 
 	//prywatne funkcje
+
+	void MoveLeft();
+	void MoveRight();
+	void pokazPytanie();
 	bool sprawdzanieKolizji();
 	void initZmienne();
 	void initOkno();
 	void initPrzeciwnik();
 	void initKloc();
+	void pokazHelp();
 	void przeciwnikWDol();
 	void przeciwnikWGore();
 	void przeciwnikWPrawo();
@@ -62,6 +67,9 @@ public:
 
 	//konstruktory i destruktory
 	gra();
+	sf::Text menu[2];
+	int helpVisible = 0;
+	int escPytaj = 0;
 	virtual ~gra();
 	void run(int opcja);
 	void setWindow(sf::RenderWindow* windowd, sf::VideoMode videoMode);

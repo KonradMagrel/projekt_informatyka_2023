@@ -32,7 +32,7 @@ int main()
 					case sf::Keyboard::Up:
 						menu->MoveUp();
 						break;
-
+					
 					case sf::Keyboard::Down:
 						menu->MoveDown();
 						break;
@@ -95,7 +95,10 @@ int main()
 				while (game->running())
 				{
 					game->update();
-					game->render();
+					if (game->helpVisible == 0 && game->escPytaj==0)
+					{
+						game->render();
+					}
 				}
 				delete game;
 				//okno->clear();

@@ -17,6 +17,10 @@ int speed = 40;
 int h=0;
 int czyDziala = 1;
 int level = 1;
+int helpf;
+int staraPredkosc;
+
+
 DWORD lastTime = GetTickCount();
 void gra::initZmienne()
 {
@@ -371,8 +375,8 @@ void gra::run(int opcja)
  zmieniajGebeCoIleRuchow = 7;
 	 ostatniX = 0;
 	 ostatniY = 0;
-	 predkosc = 10;
-	 speed = 40;
+		 predkosc = 10;
+		 speed = 40;
 	 h = 0;
 	 czyDziala = 1;
 	srand(static_cast<unsigned>(time(0)));
@@ -390,13 +394,6 @@ void gra::run(int opcja)
 		this->initbarieraSrodek();
 	}
 }
-
-gra::gra()
-{
-
-
-}
-
 gra::~gra()
 {
 	delete this->okno;
@@ -439,30 +436,30 @@ void gra::pollEvents()
 		{
 		case sf::Event::Closed:
 		{
-			//this->okno->close();
 			break;
 		}
 		case sf::Event::KeyPressed:
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				czyDziala = false;
+				//czyDziala = false;
+				pokazPytanie();
 				break;
 			}
-				//this->okno->close();
+			//this->okno->close();
 			if (event.key.code == sf::Keyboard::Right)
 			{
 				ostatniX = 1;
 				ostatniY = 0;
 				//movePrzeciwnik(ostatniX, ostatniY);
-				
+
 			}
 
 			if (event.key.code == sf::Keyboard::Left)
 			{
 				ostatniX = -1;
 				ostatniY = 0;
-		//		movePrzeciwnik(ostatniX, ostatniY);
+				//		movePrzeciwnik(ostatniX, ostatniY);
 			}
 			if (event.key.code == sf::Keyboard::Down)
 			{
@@ -477,11 +474,98 @@ void gra::pollEvents()
 				ostatniY = -1;
 				//movePrzeciwnik(ostatniX, ostatniY);
 			}
+			if (event.key.code == sf::Keyboard::F1)
+			{
+				pokazHelp();
+			}
+			if (event.key.code == sf::Keyboard::T&&escPytaj==1)
+			{
+				this->okno->close();
+			}
 			break;
 		}
-
 		}
 	}
+}
+
+void gra::pokazPytanie()
+{
+	if (predkosc > 0)
+	{
+		if (this->escPytaj == 0)
+		{
+			staraPredkosc = predkosc;
+			sf::Font fo;
+			fo.loadFromFile("arial.ttf");
+			sf::Text pytanie;
+			pytanie.setFont(fo);
+			pytanie.setString("CZY CHCESZ WYJSC");
+			pytanie.setCharacterSize(40);
+			pytanie.setFillColor(sf::Color::Green);
+			pytanie.setPosition(250.f, 200.f);
+	
+			predkosc = 0;
+			this->escPytaj = 1;
+			menu[0].setFont(fo);
+			menu[0].setFillColor(sf::Color::Yellow);
+			menu[0].setString("Tak->T");
+			menu[0].setPosition(250.f, 250.f);
+
+			menu[1].setFont(fo);
+			menu[1].setFillColor(sf::Color::Red);
+			menu[1].setString("Nie->Esc");
+			menu[1].setPosition(250.f, 280.f);
+			this->okno->draw(pytanie);
+			this->okno->draw(menu[0]);
+			this->okno->draw(menu[1]);
+		}
+	}
+	else
+	{
+		if (this->escPytaj == 1)
+		{
+			this->escPytaj = 0;
+			predkosc = staraPredkosc;
+			this->okno->clear();
+		}
+	}
+	this->okno->display();
+}
+
+ void gra::pokazHelp()
+{
+	if (predkosc > 0)
+	{
+		if (this->helpVisible == 0)
+		{
+			staraPredkosc = predkosc;
+			sf::Font fo;
+			fo.loadFromFile("arial.ttf");
+			sf::Text helpf;
+			helpf.setFont(fo);
+			helpf.setString("POMOC");
+			helpf.setCharacterSize(20);
+			helpf.setFillColor(sf::Color::Red);
+			helpf.setPosition(250.f, 200.f);
+			this->okno->draw(helpf);
+			predkosc = 0;
+			this->helpVisible = 1;
+		}
+	}
+	else
+	{
+		if (this->helpVisible == 1)
+		{
+			this->helpVisible = 0;
+			predkosc = staraPredkosc;
+			this->okno->clear();
+		}
+	}
+	this->okno->display();
+}
+
+gra:: gra(){
+
 }
 
 //funkcje
@@ -517,6 +601,13 @@ void gra::render()
 	text.setFillColor(sf::Color::White);
 	text.setPosition(10.f, 10.f);
 	this->okno->draw(text);
+	sf::Text pomoc;
+	pomoc.setFont(font);
+	pomoc.setString("F1->Help");
+	pomoc.setCharacterSize(13);
+	pomoc.setFillColor(sf::Color::White);
+	pomoc.setPosition(746.f, 1.f);
+	this->okno->draw(pomoc);
 	if (sprawdzanieKolizjiBariera()) {
 		sf::Font fon;
 		fon.loadFromFile("arial.ttf");
@@ -528,6 +619,8 @@ void gra::render()
 		koniec.setPosition(250.f, 200.f);
 		this->okno->draw(koniec);
 	}
+	
+
 	this->okno->display();
 	
 
