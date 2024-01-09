@@ -25,6 +25,8 @@ private:
 	sf::RectangleShape barieraGora;
 	sf::RectangleShape barieraSrodek;
 	sf::Music music;
+	sf::ConvexShape ksztalt;
+	sf::ConvexShape ksztaltt;
 	int selectedItemIndex=0;
 
 
@@ -56,6 +58,8 @@ private:
 	void initbarieraGora();
 	void initbarieraDol();
 	void initbarieraSrodek();
+	void initKsztalt();
+	void initKsztaltt();
 	bool sprawdzanieKolizjiBariera();
 	void przegrana();
 	void miau();

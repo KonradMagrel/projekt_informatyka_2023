@@ -109,6 +109,38 @@ void gra::initbarieraSrodek()
 	this->barieraSrodek.setSize(sf::Vector2f(20, 60));
 	this->barieraSrodek.setPosition(395.f, 295.f);
 }
+void gra::initKsztalt()
+{
+	this->ksztalt.setPointCount(10);
+	ksztalt.setPoint(0, sf::Vector2f(0, 0));
+	ksztalt.setPoint(1, sf::Vector2f(2, 5));
+	ksztalt.setPoint(2, sf::Vector2f(7, 5));
+	ksztalt.setPoint(3, sf::Vector2f(4, 8));
+	ksztalt.setPoint(4, sf::Vector2f(6, 13));
+	ksztalt.setPoint(5, sf::Vector2f(0, 10));
+	ksztalt.setPoint(6, sf::Vector2f(-6, 13));
+	ksztalt.setPoint(7, sf::Vector2f(-4, 8));
+	ksztalt.setPoint(8, sf::Vector2f(-7, 5));
+	ksztalt.setPoint(9, sf::Vector2f(-2, 5));
+	ksztalt.setFillColor(sf::Color::Red);
+	ksztalt.setPosition(390.f, 585.f);
+
+	this->ksztaltt.setPointCount(10);
+	ksztaltt.setPoint(0, sf::Vector2f(0, 0));
+	ksztaltt.setPoint(1, sf::Vector2f(2, 5));
+	ksztaltt.setPoint(2, sf::Vector2f(7, 5));
+	ksztaltt.setPoint(3, sf::Vector2f(4, 8));
+	ksztaltt.setPoint(4, sf::Vector2f(6, 13));
+	ksztaltt.setPoint(5, sf::Vector2f(0, 10));
+	ksztaltt.setPoint(6, sf::Vector2f(-6, 13));
+	ksztaltt.setPoint(7, sf::Vector2f(-4, 8));
+	ksztaltt.setPoint(8, sf::Vector2f(-7, 5));
+	ksztaltt.setPoint(9, sf::Vector2f(-2, 5));
+	ksztaltt.setFillColor(sf::Color::Red);
+	ksztaltt.setPosition(410.f, 585.f);
+
+}
+
 void gra::zmianaPolozenia()
 {
 	sf::FloatRect klocBounds = this->kloc.getGlobalBounds();
@@ -390,6 +422,7 @@ void gra::run(int opcja)
 	this->initbarieraPrawa();
 	this->initbarieraDol();
 	this->initbarieraGora();
+	this->initKsztalt();
 	if (level == 2) {
 		this->initbarieraSrodek();
 	}
@@ -589,8 +622,10 @@ void gra::render()
 	this->okno->draw(this->barieraPrawa);
 	this->okno->draw(this->barieraGora);
 	this->okno->draw(this->barieraDol);
+	this->okno->draw(this->ksztalt);
 	if (level==2) {
 		this->okno->draw(this->barieraSrodek);
+		this->okno->draw(this->ksztaltt);
 	}
 	sf::Font font;
 	font.loadFromFile("arial.ttf");
