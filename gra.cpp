@@ -469,12 +469,14 @@ void gra::pollEvents()
 		{
 		case sf::Event::Closed:
 		{
+			this->okno->close();
 			break;
 		}
 		case sf::Event::KeyPressed:
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
+				
 				//czyDziala = false;
 				pokazPytanie();
 				break;
@@ -648,11 +650,15 @@ void gra::render()
 		fon.loadFromFile("arial.ttf");
 		sf::Text koniec;
 		koniec.setFont(fon);
-		koniec.setString("Koniec Gry\n By wyjsc kliknij esc\n By zarac ponownie kliknij 1");
+		koniec.setString("Koniec Gry\n By wyjsc kliknij esc");
 		koniec.setCharacterSize(h);
 		koniec.setFillColor(sf::Color::Red);
 		koniec.setPosition(250.f, 200.f);
 		this->okno->draw(koniec);
+		if ((event.key.code == sf::Keyboard::Escape)|| (event.type == sf::Event::Closed))
+		{
+			this->okno->close();
+		}
 	}
 	
 

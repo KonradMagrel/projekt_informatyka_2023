@@ -59,7 +59,6 @@ private:
 	void initbarieraDol();
 	void initbarieraSrodek();
 	void initKsztalt();
-	void initKsztaltt();
 	bool sprawdzanieKolizjiBariera();
 	void przegrana();
 	void miau();
