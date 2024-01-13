@@ -3,6 +3,7 @@
 #include <SFML/System.hpp>
 #include <SFML/window.hpp>
 #include <SFML/Audio.hpp>
+#include "HighScore.h"
 /*
 * klasa gry cos ala silnik?
 */
@@ -27,8 +28,8 @@ private:
 	sf::Music music;
 	sf::ConvexShape ksztalt;
 	sf::ConvexShape ksztaltt;
-	int selectedItemIndex=0;
-
+	int selectedItemIndex = 0;
+	HighScore hs[5];
 
 
 	//prywatne funkcje
@@ -63,13 +64,19 @@ private:
 	void przegrana();
 	void miau();
 	bool klocDotykaSciany();
-
+	bool sprawdzanieKolizjiBarieraGora();
+	bool sprawdzanieKolizjiBarieraDol();
+	void barieraPoz();
+	void sprawdzanieKolizjiBarieraGoraDol();
+	void loadHighScores();
 	//objekty rysowane
 
 public:
 
 	//konstruktory i destruktory
 	gra();
+	void zapiszHighScores();
+	void dodajNoiweHS();
 	sf::Text menu[2];
 	int helpVisible = 0;
 	int escPytaj = 0;

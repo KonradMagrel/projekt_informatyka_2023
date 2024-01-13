@@ -9,7 +9,7 @@ int main()
 	sf::VideoMode videoMode;
 	videoMode.width = 800;
 	videoMode.height = 600;
-;
+	;
 
 	while (true)
 	{
@@ -32,7 +32,7 @@ int main()
 					case sf::Keyboard::Up:
 						menu->MoveUp();
 						break;
-					
+
 					case sf::Keyboard::Down:
 						menu->MoveDown();
 						break;
@@ -61,8 +61,7 @@ int main()
 
 					break;
 				case sf::Event::Closed:
-					//okno->close();
-
+					okno->close();
 					break;
 
 				}
@@ -95,11 +94,13 @@ int main()
 				while (game->running())
 				{
 					game->update();
-					if (game->helpVisible == 0 && game->escPytaj==0)
+					if (game->helpVisible == 0 && game->escPytaj == 0)
 					{
 						game->render();
 					}
 				}
+				game->dodajNoiweHS();
+				game->zapiszHighScores();
 				delete game;
 				//okno->clear();
 			}
