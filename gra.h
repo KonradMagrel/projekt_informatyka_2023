@@ -4,16 +4,10 @@
 #include <SFML/window.hpp>
 #include <SFML/Audio.hpp>
 #include "HighScore.h"
-/*
-* klasa gry cos ala silnik?
-*/
 class gra
 {
 private:
-	//zmienne
-	//okno
 	sf::RenderWindow* okno;
-
 	sf::Event event;
 	sf::VideoMode videoMode;
 	sf::Sprite przeciwnik;
@@ -30,10 +24,6 @@ private:
 	sf::ConvexShape ksztaltt;
 	int selectedItemIndex = 0;
 	HighScore hs[5];
-
-
-	//prywatne funkcje
-
 	void MoveLeft();
 	void MoveRight();
 	void pokazPytanie();
@@ -43,6 +33,7 @@ private:
 	void initPrzeciwnik();
 	void initKloc();
 	void pokazHelp();
+	void pokazHS();
 	void przeciwnikWDol();
 	void przeciwnikWGore();
 	void przeciwnikWPrawo();
@@ -69,11 +60,7 @@ private:
 	void barieraPoz();
 	void sprawdzanieKolizjiBarieraGoraDol();
 	void loadHighScores();
-	//objekty rysowane
-
 public:
-
-	//konstruktory i destruktory
 	gra();
 	void zapiszHighScores();
 	void dodajNoiweHS();
@@ -84,7 +71,6 @@ public:
 	void run(int opcja);
 	void setWindow(sf::RenderWindow* windowd, sf::VideoMode videoMode);
 	const bool running() const;
-	//funkcje
 	void pollEvents();
 	void update();
 	void render();

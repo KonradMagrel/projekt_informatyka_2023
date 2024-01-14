@@ -3,10 +3,12 @@
 #include <chrono>
 #include <iostream>
 #include <windows.h>
+#include <process.h>
 #include "SFML/Audio.hpp"
+
 using namespace std;
-//prywatne funkcje
 using namespace std::chrono;
+
 int kierunek = 0;// kierunek 0 - prawo, 1-lewo 2- gora 3 - dol
 int geba = 0;
 int licznik = 0;
@@ -22,11 +24,19 @@ int helpf;
 int x;
 int staraPredkosc;
 int way = 1;
+int b;
 DWORD lastTime = GetTickCount();
+
+
+struct beepParams
+{
+	int freq;
+	int mil;
+};
+
 void gra::initZmienne()
 {
 	loadHighScores();
-	//this->okno = nullptr;
 	this->licznikPunktow = 0;
 }
 
@@ -80,16 +90,6 @@ void gra::zapiszHighScores()
 	}
 	catch (...) {}
 }
-
-void gra::initOkno()
-{	
-	return;
-	this->videoMode.width = 800;
-	this->videoMode.height = 600;
-	this->okno = new sf::RenderWindow(this->videoMode, "Game 1", sf::Style::Titlebar | sf::Style::Close);
-	this->okno->setFramerateLimit(144);
-}
-
 void gra::zmienGebe(int el)
 {
 	std::string filename = "pacmanhd.png";
@@ -101,26 +101,13 @@ void gra::zmienGebe(int el)
 	{
 		this->przeciwnik.setTexture(this->przeciwnikTexture);
 	}
-	//this->przeciwnikTexture.loadFromFile(filename);
-
-	// Ustawienie wczytanej tekstury na obiekcie przeciwnik
-	///this->przeciwnik.setTexture(this->przeciwnikTexture);
-
-	// Ustawienie punktu odniesienia na œrodek tekstury
-	//
 }
 void gra::initPrzeciwnik()
 {
-	// Wczytywanie tekstury z pliku przy pomocy nowej metody
 	this->przeciwnikTexture.loadFromFile("pacmanhd.png");
 	this->przeciwnikTextureZamknietaGeba.loadFromFile("pacmanhd2.png");
-	// Ustawienie wczytanej tekstury na obiekcie przeciwnik
 	this->przeciwnik.setTexture(this->przeciwnikTexture);
-	//this->przeciwnik.setTexture(this->przeciwnikTexture);
-	// Ustawienie punktu odniesienia na œrodek tekstury
 	this->przeciwnik.setOrigin(this->przeciwnikTexture.getSize().x / 2, this->przeciwnikTexture.getSize().y / 2);
-
-	// Ustawienie pocz¹tkowej pozycji przeciwnika (mo¿esz dostosowaæ do w³asnych potrzeb)
 	this->przeciwnik.setPosition(640.f, 300.f);
 	this->przeciwnik.setScale(0.05f, 0.05f);
 }
@@ -132,7 +119,7 @@ void gra::initKloc()
 }
 void gra::initbarieraGora()
 {
-	this->barieraGora.setFillColor(sf::Color::Red);
+	this->barieraGora.setFillColor(sf::Color::Blue);
 	this->barieraGora.setSize(sf::Vector2f(800, 15));
 	this->barieraGora.setPosition(0.f, 0.f);
 }
@@ -144,7 +131,7 @@ void gra::initbarieraPrawa()
 }
 void gra::initbarieraDol()
 {
-	this->barieraDol.setFillColor(sf::Color::Yellow);
+	this->barieraDol.setFillColor(sf::Color::Blue);
 	this->barieraDol.setSize(sf::Vector2f(800, 15));
 	this->barieraDol.setPosition(0.f, 585.f);
 }
@@ -193,8 +180,7 @@ void gra::initKsztalt()
 	ksztaltt.setPosition(410.f, 585.f);
 
 }
-
-void gra::zmianaPolozenia()
+void gra::zmianaPolozenia()//generuje losowa pozycje kloca
 {
 	sf::FloatRect klocBounds = this->kloc.getGlobalBounds();
 	sf::FloatRect przeciwnikBounds = this->przeciwnik.getGlobalBounds();
@@ -202,7 +188,6 @@ void gra::zmianaPolozenia()
 	{
 		float x = static_cast<float>(rand() % 800);
 		float y = static_cast<float>(rand() % 600);
-		//licznikPunktow = this->ilePunktowZaKloca;
 		ilePunktowZaKloca = 1;
 		this->kloc.setPosition(x, y);
 	}
@@ -214,14 +199,11 @@ bool gra::sprawdzanieKolizji()//sprawdza czy kloc dotkna przeciwnika
 
 	if (klocBounds.intersects(przeciwnikBounds))
 	{
-		// Kolizja zachodzi
 		return true;
 	}
-
-	// Brak kolizji
 	return false;
 }
-bool gra::klocDotykaSciany()//sprawdza czy kloc dotkna przeciwnika
+bool gra::klocDotykaSciany()//sprawdza czy nie respi sie kloc na scianie
 {
 	sf::FloatRect klocBounds = this->kloc.getGlobalBounds();
 	sf::FloatRect barieraGora = this->barieraGora.getGlobalBounds();
@@ -231,25 +213,13 @@ bool gra::klocDotykaSciany()//sprawdza czy kloc dotkna przeciwnika
 
 	if (klocBounds.intersects(barieraGora) || klocBounds.intersects(barieraDol) || klocBounds.intersects(barieraLewa) || klocBounds.intersects(barieraPrawa))
 	{
-		// Kolizja zachodzi
-		return true;
-	}
-
-	// Brak kolizji
-	return false;
-}
-bool gra::sprawdzanieKolizjiBarieraGora() {
-	sf::FloatRect barieraGora = this->barieraGora.getGlobalBounds();
-	sf::FloatRect barieraSrodek = this->barieraSrodek.getGlobalBounds();
-	if (barieraGora.intersects(barieraSrodek))
-	{
 		return true;
 	}
 	return false;
-
 }
 
-void gra::sprawdzanieKolizjiBarieraGoraDol() {
+void gra::sprawdzanieKolizjiBarieraGoraDol() //sprawdza czy bariera srodkowa dotyka bariery gora lub dol
+{ 
 	sf::FloatRect barieraGora = this->barieraGora.getGlobalBounds();
 	sf::FloatRect barieraSrodek = this->barieraSrodek.getGlobalBounds();
 	sf::FloatRect barieraDol = this->barieraDol.getGlobalBounds();
@@ -263,7 +233,7 @@ void gra::sprawdzanieKolizjiBarieraGoraDol() {
 	}
 }
 
-bool gra::sprawdzanieKolizjiBariera()//sprawdza czy przeciwnik dotkna bariery
+bool gra::sprawdzanieKolizjiBariera()//sprawdza czy przeciwnik dotyka bariery
 {
 	sf::FloatRect barieraGora = this->barieraGora.getGlobalBounds();
 	sf::FloatRect barieraDol = this->barieraDol.getGlobalBounds();
@@ -274,17 +244,14 @@ bool gra::sprawdzanieKolizjiBariera()//sprawdza czy przeciwnik dotkna bariery
 
 	if (barieraGora.intersects(przeciwnikBounds) || barieraDol.intersects(przeciwnikBounds) || barieraPrawa.intersects(przeciwnikBounds) || barieraLewa.intersects(przeciwnikBounds) || barieraSrodek.intersects(przeciwnikBounds))
 	{
-		// Kolizja zachodzi
 		return true;
 	}
-	// Brak kolizji
 	return false;
 }
 
 void gra::doliczPkt() {
 	this->ilePunktow = this->ilePunktow + ilePunktowZaKloca;
 	speed = 40 - (this->ilePunktow / 2);
-	//ilePunktowZaKloca = 0;
 }
 
 void gra::movePrzeciwnik(float x, float y)
@@ -447,11 +414,8 @@ void gra::przeciwnikWDol()
 
 void gra::setWindow(sf::RenderWindow* windowd, sf::VideoMode videoMode)
 {
-	//this->videoMode.width = 800;
-	//this->videoMode.height = 600;
 	this->okno = windowd;
 	this->videoMode = videoMode;
-	//this->okno = new sf::RenderWindow(this->videoMode, "Game 1", sf::Style::Titlebar | sf::Style::Close);
 	this->okno->setFramerateLimit(144);
 }
 
@@ -473,7 +437,6 @@ void gra::run(int opcja)
 	this->ilePunktowZaKloca = 1;
 	this->ilePunktow = 0;
 	this->initZmienne();
-	//this->initOkno();
 	this->initPrzeciwnik();
 	this->initKloc();
 	this->initbarieraLewa();
@@ -486,6 +449,8 @@ void gra::run(int opcja)
 
 	}
 }
+
+
 gra::~gra()
 {
 	delete this->okno;
@@ -514,6 +479,14 @@ void gra::dodajNoiweHS()
 	this->hs[0].setHighScore("Poziom: " + to_string(level) + ", Punkty: " + to_string(this->ilePunktow) + ", czas: " + str);
 }
 
+void __cdecl beepTone(void* arg)
+{
+	beepParams* params = static_cast<beepParams*>(arg);
+	Beep(params->freq, params->mil);
+	delete params;
+	_endthread();
+}
+
 void gra::pollEvents()
 {
 	DWORD currentTime = GetTickCount();
@@ -533,8 +506,15 @@ void gra::pollEvents()
 
 	if (this->sprawdzanieKolizji())
 	{
+		beepParams* params = new beepParams;
+		params->freq = 1500;
+		params->mil = 100;
+
+		if (_beginthread(&beepTone, 0, params) == -1)
+			delete params;
 		this->doliczPkt();
 		this->zmianaPolozenia();
+
 	}
 	if (currentTime - lastTime > speed)
 	{
@@ -554,43 +534,41 @@ void gra::pollEvents()
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-
-				//czyDziala = false;
 				pokazPytanie();
 				break;
 			}
-			//this->okno->close();
 			if (event.key.code == sf::Keyboard::Right)
 			{
 				ostatniX = 1;
 				ostatniY = 0;
-				//movePrzeciwnik(ostatniX, ostatniY);
-
 			}
 
 			if (event.key.code == sf::Keyboard::Left)
 			{
 				ostatniX = -1;
 				ostatniY = 0;
-				//		movePrzeciwnik(ostatniX, ostatniY);
+				
 			}
 			if (event.key.code == sf::Keyboard::Down)
 			{
 				ostatniX = 0;
 				ostatniY = 1;
-				//movePrzeciwnik(ostatniX, ostatniY);
 			}
 
 			if (event.key.code == sf::Keyboard::Up)
 			{
 				ostatniX = 0;
 				ostatniY = -1;
-				//movePrzeciwnik(ostatniX, ostatniY);
 			}
 			if (event.key.code == sf::Keyboard::F1)
 			{
 				pokazHelp();
 			}
+			if (event.key.code == sf::Keyboard::F9)
+			{
+				pokazHS();
+			}
+
 			if (event.key.code == sf::Keyboard::F10)
 			{
 				this->dodajNoiweHS();
@@ -598,7 +576,6 @@ void gra::pollEvents()
 			}
 			if (event.key.code == sf::Keyboard::T && escPytaj == 1)
 			{
-				//this->okno->close();
 				czyDziala = 0;
 			}
 			break;
@@ -661,10 +638,10 @@ void gra::pokazHelp()
 			fo.loadFromFile("arial.ttf");
 			sf::Text helpf;
 			helpf.setFont(fo);
-			helpf.setString("POMOC");
+			helpf.setString("Sterowanie: Strzalkami\n by wyjsc z gry escape\n by wyjsc z pomocy kliknij f1\n liczba gwiazdek oznacza poziom trudnosci");
 			helpf.setCharacterSize(20);
 			helpf.setFillColor(sf::Color::Red);
-			helpf.setPosition(250.f, 200.f);
+			helpf.setPosition(280.f, 300.f);
 			this->okno->draw(helpf);
 			predkosc = 0;
 			this->helpVisible = 1;
@@ -682,11 +659,53 @@ void gra::pokazHelp()
 	this->okno->display();
 }
 
+void gra::pokazHS()
+{
+	if (predkosc > 0)
+	{
+		if (this->helpVisible == 0)
+		{
+			string x = "";
+			try
+			{
+				x += this->hs[0].getHighScore();
+				x += this->hs[1].getHighScore();
+				x += this->hs[2].getHighScore();
+				x += this->hs[3].getHighScore();
+				x += this->hs[4].getHighScore();
+			}
+			catch (...) {}
+			staraPredkosc = predkosc;
+			sf::Font fo;
+			fo.loadFromFile("arial.ttf");
+			sf::Text helpf;
+			helpf.setFont(fo);
+			helpf.setString(x);
+			helpf.setCharacterSize(20);
+			helpf.setFillColor(sf::Color::Green);
+			helpf.setPosition(180.f, 300.f);
+			this->okno->draw(helpf);
+			predkosc = 0;
+			this->helpVisible = 1;
+		}
+	}
+	else
+	{
+		if (this->helpVisible == 1)
+		{
+			this->helpVisible = 0;
+			predkosc = staraPredkosc;
+			this->okno->clear();
+		}
+	}
+	this->okno->display();
+}
+
+
 gra::gra() {
 
 }
 
-//funkcje
 void gra::update()
 {
 	this->pollEvents();
@@ -742,11 +761,16 @@ void gra::render()
 		koniec.setFillColor(sf::Color::Red);
 		koniec.setPosition(250.f, 200.f);
 		this->okno->draw(koniec);
-
 		if ((event.key.code == sf::Keyboard::Escape) || (event.type == sf::Event::Closed))
 		{
-			//this->okno->close();
 			czyDziala = 0;
+			beepParams* params = new beepParams;
+			params->freq = 700;
+			params->mil = 500;
+
+			if (_beginthread(&beepTone, 0, params) == -1)
+				delete params;
+
 		}
 	}
 

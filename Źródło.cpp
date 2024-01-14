@@ -1,15 +1,30 @@
 #include <SFML/Graphics.hpp>
+#include <chrono>
+#include <thread>
 #include "gra.h"
 #include "Menu.h"
+
+
+void instrukcja(sf::RenderWindow* okno)
+{
+	sf::Font fon;
+	fon.loadFromFile("arial.ttf");
+	sf::Text koniec;
+	koniec.setFont(fon);
+	koniec.setString("Koniec Gry\n By wyjsc kliknij esc");
+	koniec.setCharacterSize(20);
+	koniec.setFillColor(sf::Color::Red);
+	koniec.setPosition(250.f, 200.f);
+	okno->draw(koniec);
+	okno->display();
+}
 
 int main()
 {
 	int opcja = -1;
-	//sf::RenderWindow window(sf::VideoMode(800, 600), "SFML WORK!");
 	sf::VideoMode videoMode;
 	videoMode.width = 800;
 	videoMode.height = 600;
-	;
 
 	while (true)
 	{
@@ -42,14 +57,14 @@ int main()
 						{
 						case 0:
 							opcja = 1;
-							//std::cout << "Play button has been pressed" << std::endl;
 							break;
 						case 1:
-							//std::cout << "Option button has been pressed" << std::endl;
 							opcja = 2;
 							break;
 						case 2:
 							opcja = 3;
+							instrukcja(okno);
+							sf::sleep(sf::milliseconds(10000));
 							break;
 						case 3:
 							opcja = 4;
@@ -102,25 +117,21 @@ int main()
 				game->dodajNoiweHS();
 				game->zapiszHighScores();
 				delete game;
-				//okno->clear();
 			}
 			catch (...) {}
 			break;
 		}
 		case 3:
 		{
-			//opcje
 			break;
 		}
 		case 4:
 		{
-			//wyjœcie
 			exit(0);
 			break;
 		}
 		}
 
-		//okno->close();
 	}
 	return 0;
 }
